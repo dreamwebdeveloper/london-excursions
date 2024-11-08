@@ -3200,21 +3200,52 @@
             },
             breakpoints: {
                 320: {
-                    slidesPerView: 1,
-                    spaceBetween: 20,
-                    autoHeight: true
+                    slidesPerView: 1
                 },
-                480: {
-                    slidesPerView: 2,
-                    spaceBetween: 20
+                345: {
+                    slidesPerView: 1.125
+                },
+                365: {
+                    slidesPerView: 1.15
+                },
+                390: {
+                    slidesPerView: 1.25
+                },
+                420: {
+                    slidesPerView: 1.4
+                },
+                475: {
+                    slidesPerView: 1.55
+                },
+                515: {
+                    slidesPerView: 1.7
+                },
+                590: {
+                    slidesPerView: 2
+                },
+                640: {
+                    slidesPerView: 2.15
+                },
+                675: {
+                    slidesPerView: 2.3
+                },
+                740: {
+                    slidesPerView: 2.5
+                },
+                795: {
+                    slidesPerView: 2.7
                 },
                 882: {
-                    slidesPerView: 3,
-                    spaceBetween: 20
+                    slidesPerView: 3
+                },
+                935: {
+                    slidesPerView: 3.2
                 },
                 1024: {
-                    slidesPerView: 4,
-                    spaceBetween: 20
+                    slidesPerView: 3.5
+                },
+                1185: {
+                    slidesPerView: 4
                 }
             },
             on: {}
@@ -3280,6 +3311,18 @@
     const addEventOnElem = function(elem, type, callback) {
         if (elem.length > 1) for (let i = 0; i < elem.length; i++) elem[i].addEventListener(type, callback); else elem.addEventListener(type, callback);
     };
+    function counter() {
+        let count = setInterval((function() {
+            let c = document.querySelector(".preloader__counter"), int = parseInt(c.textContent);
+            c.textContent = (++int).toString();
+            if (int == 100) {
+                clearInterval(count);
+                c.classList.add("hide-counter");
+                document.querySelector(".preloader").classList.add("loaded");
+            }
+        }), 60);
+    }
+    counter();
     const navbar = document.querySelector("[data-navbar]");
     const navTogglers = document.querySelectorAll("[data-nav-toggler]");
     const overlay = document.querySelector("[data-overlay]");
@@ -3294,6 +3337,25 @@
         document.body.classList.remove("nav-active");
     };
     addEventOnElem(navTogglers, "click", navigation);
+    const showSocial = (toggleCard, socialCard) => {
+        const toggle = document.querySelectorAll(toggleCard), social = document.querySelectorAll(socialCard);
+        for (let index = 0; index < toggle.length; index++) {
+            const toggler = toggle[index];
+            toggler.addEventListener("click", (() => {
+                for (let index = 0; index < social.length; index++) {
+                    const socialItem = social[index];
+                    if (socialItem.classList.contains("animation")) {
+                        socialItem.classList.add("down-animation");
+                        setTimeout((() => {
+                            socialItem.classList.remove("down-animation");
+                        }), 1e3);
+                    }
+                    socialItem.classList.toggle("animation");
+                }
+            }));
+        }
+    };
+    showSocial(".info__slide-toggle", ".info__slide");
     const btn = document.querySelector(".excursions__tabs");
     let i;
     for (i = 0; i <= btn.children.length - 1; i++) btn.children[i].querySelector("button").onclick = activeBtn;
@@ -3348,6 +3410,12 @@
             contacts.classList.toggle("active");
         }));
     }
+    const animateElements = document.querySelectorAll("[data-animate]");
+    const animateElementsScroll = function() {
+        for (let i = 0, len = animateElements.length; i < len; i++) if (animateElements[i].getBoundingClientRect().top < window.innerHeight / 1.3) animateElements[i].classList.add("animated"); else animateElements[i].classList.remove("animated");
+    };
+    window.addEventListener("scroll", animateElementsScroll);
+    window.addEventListener("load", animateElementsScroll);
     window["FLS"] = true;
     isWebp();
     pageNavigation();
